@@ -13,7 +13,7 @@ class TwitterHandle
     end
     
     def has_been_fetched?(r)
-        fetched = @_last_twits.include? r
+        fetched = @_last_twits.include? r.id
         unless fetched
             @_last_twits.delete_at 0 unless @_last_twits.size < TwitterHandle::Max
             @_last_twits << r.id
