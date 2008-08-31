@@ -15,7 +15,8 @@ account, and for every update in your timeline, you'll received an IM message fr
 * Things to do:
   * Export the configuration file to yaml in user directory
   * Make gem-installable
-
+* Things could be fun to do:
+  * Communicate with other microblogging systems (plurk, jaiku), that way you can interact with all of them with the same account (your jabber account), making the bot a wrapper of all your microblogging accounts
 == SYNOPSIS:
 
   FIXME (code sample of usage)
