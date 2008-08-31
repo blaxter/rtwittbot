@@ -1,0 +1,29 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+require 'daemons'
+
+APP_NAME = 'rtwitbot'
+
+def daemon_for(app_name, script)
+    base = if File.symlink? __FILE__
+        File.readlink __FILE__
+    else
+        __FILE__
+    end
+
+    begin
+        Dir.mkdir File.expand_path("~/.#{app_name}")
+    rescue Errno::EEXIST
+        # all ok, already exists
+    end
+
+    daemon  = "#{File.dirname base}/#{script}"
+    options = { :app_name   => app_name,
+                :dir_mode   => :normal,
+                :dir        => "~/.#{app_name}",
+                :log_output => true }
+
+    Daemons.run daemon, options
+end
+
+daemon_for(APP_NAME, '../lib/main.rb')
