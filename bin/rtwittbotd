@@ -2,7 +2,7 @@
 require 'rubygems'
 require 'daemons'
 
-APP_NAME = 'rtwitbot'
+APP_NAME = 'rtwittbot'
 
 def daemon_for(app_name, script)
     base = if File.symlink? __FILE__
@@ -26,4 +26,4 @@ def daemon_for(app_name, script)
     Daemons.run daemon, options
 end
 
-daemon_for(APP_NAME, '../lib/main.rb')
+daemon_for(APP_NAME, 'rtwittbot.rb')
