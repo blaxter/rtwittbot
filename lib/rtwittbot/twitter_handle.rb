@@ -3,11 +3,20 @@ require 'time'
 require 'twitter'
 
 class TwitterHandle
-    Max = 10
+    MAX = 10
+    USER_AGENT = 'rtwittbot'
 
     def initialize(user, password)
-        @twitter = Twitter::Client.new(:login => user, :password => password)
-        @last_fetch = Time.now - 60 # 1 minute ago
+        Twitter::Client.configure do |conf|
+            conf.source              = USER_AGENT
+            conf.user_agent          = USER_AGENT
+            conf.application_name    = USER_AGENT
+            conf.application_version = RTwittBot::VERSION
+            conf.application_url     = 'http://github.com/blaxter/rtwittbot'
+        end
+        @twitter     = Twitter::Client.new(:login => user, :password => password)
+
+        @last_fetch  = Time.now - 60 # 1 minute ago
 
         @_last_twits = []
     end
@@ -15,7 +24,7 @@ class TwitterHandle
     def has_been_fetched?(r)
         fetched = @_last_twits.include? r.id
         unless fetched
-            @_last_twits.delete_at 0 unless @_last_twits.size < TwitterHandle::Max
+            @_last_twits.delete_at 0 unless @_last_twits.size < TwitterHandle::MAX
             @_last_twits << r.id
         else
             puts "Status has been fetched twice! #{r.text}, #{r.created_at}, #{r.id}"
@@ -48,7 +57,7 @@ class TwitterHandle
     
         ret.reverse
     end
-    
+
     protected
     def is_own_twit?(status)
         status.user.screen_name == status.client.instance_variable_get('@login')
