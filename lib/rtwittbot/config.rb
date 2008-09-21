@@ -21,3 +21,5 @@ module RTwittBot
 
     end
 end
+
+$DEBUG = true

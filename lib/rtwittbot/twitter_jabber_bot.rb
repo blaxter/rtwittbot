@@ -12,7 +12,11 @@ class TwitterJabberBot
         @bot.each_message do |from, message|
              # To allow several users, here we should get the properly TwitterHandle 
              # according to +from+ variable
-             @twitter.twit message
+             if message.match(/.+ \([^(]+\): .+/)
+                 puts "ERROR: trying to send a fetched twit? #{Time.now}, #{from} -- #{message}" if $DEBUG
+             else
+                 @twitter.twit message
+             end
         end
         bot_default_status
     end
