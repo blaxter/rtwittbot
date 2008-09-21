@@ -47,6 +47,7 @@ class TwitterHandle
     def timeline(since = @last_fetch)
         ret = []
         puts "Trying to get timeline since #{since.gmtime + 1}"
+        last_fetch = since
         @twitter.timeline_for(:friends, :since => since.gmtime + 1) do |status|        
             unless (!RECEIVE_OWN_TWITS && is_own_twit?(status)) || has_been_fetched?(status)
                 ret << { :author  => status.user.name,
@@ -54,10 +55,9 @@ class TwitterHandle
                          :message => status.text,
                          :time    => status.created_at } 
             end
+            last_fetch = status.created_at if status.created_at > last_fetch
         end
-        @last_fetch = ret.last[:time] + 1 unless ret.size == 0
-        puts "#{ret.size} twits has been fetched" unless ret.size == 0
-        puts "New @last_fetch = #{@last_fetch}" unless @last_fetch == since
+        @last_fetch = last_fetch
         ret.reverse
     end
     
