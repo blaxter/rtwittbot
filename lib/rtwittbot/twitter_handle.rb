@@ -27,6 +27,7 @@ class TwitterHandle
             @_last_twits.delete_at 0 unless @_last_twits.size < TwitterHandle::MAX
             @_last_twits << r.id
         else
+            puts "_last_twits contents: #{@_last_twits.join ', '} (id = #{r.id})"
             puts "Status has been fetched twice! #{r.text}, #{r.created_at}, #{r.id}"
         end
         fetched
@@ -45,8 +46,9 @@ class TwitterHandle
     #   `- :time    - Time
     def timeline(since = @last_fetch)
         ret = []
-        @twitter.timeline_for(:friends, :since => since.gmtime + 1) do |status|
-            unless has_been_fetched?(status) || (!RECEIVE_OWN_TWITS && is_own_twit?(status))
+        puts "Trying to get timeline since #{since.gmtime + 1}"
+        @twitter.timeline_for(:friends, :since => since.gmtime + 1) do |status|        
+            unless (!RECEIVE_OWN_TWITS && is_own_twit?(status)) || has_been_fetched?(status)
                 ret << { :author  => status.user.name,
                          :nick    => status.user.screen_name,
                          :message => status.text,
@@ -54,10 +56,11 @@ class TwitterHandle
             end
         end
         @last_fetch = ret.last[:time] + 1 unless ret.size == 0
-    
+        puts "#{ret.size} twits has been fetched" unless ret.size == 0
+        puts "New @last_fetch = #{@last_fetch}" unless @last_fetch == since
         ret.reverse
     end
-
+    
     protected
     def is_own_twit?(status)
         status.user.screen_name == status.client.instance_variable_get('@login')
