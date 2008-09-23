@@ -27,6 +27,7 @@ account, and for every update in your timeline, you'll received an IM message fr
   * gem install twitter4r
   * gem install xmpp4r
   * gem install daemons
+  * gem install idn
 
 == INSTALL:
 

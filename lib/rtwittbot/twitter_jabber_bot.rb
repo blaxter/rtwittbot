@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-
 class TwitterJabberBot
     def initialize(jabber_data, twitter_data, jabber_user)
         @bot     = JabberBot.new(jabber_data[:user], jabber_data[:password], jabber_data[:server])

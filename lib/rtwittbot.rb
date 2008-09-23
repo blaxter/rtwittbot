@@ -40,6 +40,7 @@ module RTwittBot
     # the _filename_ does not have to be equivalent to the directory.
     #
     def self.require_all_libs_relative_to( fname, dir = nil )
+        require 'rubygems'
         dir ||= ::File.basename(fname, '.*')
         search_me = ::File.expand_path(
             ::File.join(::File.dirname(fname), dir, '**', '*.rb'))

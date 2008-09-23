@@ -1,4 +1,7 @@
 require 'rubygems'
+
+gem 'xmpp4r'
+gem 'idn'
 require 'xmpp4r/client'
 require 'xmpp4r/roster'
 require 'xmpp4r/vcard'

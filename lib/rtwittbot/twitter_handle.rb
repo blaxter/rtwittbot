@@ -1,5 +1,7 @@
 require 'rubygems'
 require 'time'
+
+gem 'twitter4r'
 require 'twitter'
 
 class TwitterHandle
