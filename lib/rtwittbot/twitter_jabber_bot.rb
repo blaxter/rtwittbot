@@ -1,4 +1,6 @@
 class TwitterJabberBot
+    include Loggeable
+
     def initialize(jabber_data, twitter_data, jabber_user)
         @bot     = JabberBot.new(jabber_data[:user], jabber_data[:password], jabber_data[:server])
         @twitter = TwitterHandle.new(twitter_data[:user], twitter_data[:password])
@@ -13,7 +15,11 @@ class TwitterJabberBot
              if message.match(/.+ \([^(]+\): .+/)
                  puts "ERROR: trying to send a fetched twit? #{Time.now}, #{from} -- #{message}" if $DEBUG
              else
-                 @twitter.twit message
+                 begin
+                     @twitter.twit message
+                 rescue
+                     @bot.say_to @user, "ERROR, twitter down? Message has not been sent, i guess..."
+                 end
              end
         end
         bot_default_status
@@ -30,6 +36,8 @@ class TwitterJabberBot
             rescue Exception => e
                 puts " #{Time.now} Exception catched: #{e}"
                 bot_error_status e
+            rescue
+                puts "FATAL #{Time.now} Runtime Exception #{$!}"
             end
             sleep SLEEP_TIME_IN_SEC
         end
@@ -45,11 +53,15 @@ class TwitterJabberBot
         @bot.set_status ''         
         @bot.screen_name BOT_NAME    
         @unavailable = false
+    rescue Exception =>  e
+        log_error e
     end
 
     def bot_error_status(e)
         @bot.set_status "#{e}"
         @bot.screen_name(BOT_NAME + " (ERROR)")
         @unavailable = true
+    rescue Exception => e
+        log_error e
     end
 end

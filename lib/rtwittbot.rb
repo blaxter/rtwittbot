@@ -45,7 +45,21 @@ module RTwittBot
         search_me = ::File.expand_path(
             ::File.join(::File.dirname(fname), dir, '**', '*.rb'))
 
-        Dir.glob(search_me).sort.each {|rb| require rb}
+        rbs           = Dir.glob(search_me).sort
+        previous_size = rbs.size
+        while rbs.size > 0 do
+            loaded = rbs.select do |rb|
+                begin
+                    require rb
+                    true
+                rescue
+                    false
+                end
+            end
+            rbs = rbs - loaded
+            raise 'Unable to load libraries' if rbs.size == previous_size
+            previous_size = rbs.size
+        end
     end
 
 end  # module RTwittBot
