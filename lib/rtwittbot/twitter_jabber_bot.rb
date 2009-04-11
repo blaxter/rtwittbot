@@ -50,8 +50,8 @@ class TwitterJabberBot
     end
 
     def bot_default_status
-        @bot.set_status ''         
-        @bot.screen_name BOT_NAME    
+        @bot.set_status 'ok'
+        @bot.screen_name BOT_NAME
         @unavailable = false
     rescue Exception =>  e
         log_error e
